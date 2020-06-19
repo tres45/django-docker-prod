@@ -127,3 +127,8 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Volumes
+# static_volume/
+# media_volume/
+# postgres/pgdata

@@ -1,0 +1,37 @@
+version: '3.7'
+
+services:
+  web:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    container_name: web
+    image: webapp:0.0.1
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./app:/usr/src/app
+    networks:
+      - webapp_net
+    ports:
+      - 8000:8000
+    env_file:
+      - ./.env.web.dev
+    restart: always
+
+  db:
+    build: ./postgres
+    container_name: db
+    volumes:
+      - ./postgres/pgdata:/data
+    networks:
+      - webapp_net
+    ports:
+      - 5432:5432
+    env_file:
+      - ./.env.db
+    restart: always
+
+networks:
+  webapp_net:
+    driver: bridge
+    name: webapp_net
