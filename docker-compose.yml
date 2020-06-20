@@ -1,37 +1,87 @@
 version: '3.7'
 
 services:
-  web:
-    build:
-      context: ./app
-      dockerfile: Dockerfile
-    container_name: web
-    image: webapp:0.0.1
-    command: python manage.py runserver 0.0.0.0:8000
+  nginx:
+    build: ./nginx
+    container_name: nginx
     volumes:
-      - ./app:/usr/src/app
+      - app:/home/app/web
+    links:
+      - web:web
     networks:
       - webapp_net
     ports:
-      - 8000:8000
-    env_file:
-      - ./.env.web.dev
+      - 80:80
+    networks:
+      - webapp_net
+    depends_on:
+      - web
     restart: always
 
-  db:
-    build: ./postgres
-    container_name: db
+  web:
+    build: ./app
+    container_name: web
+    image: webapp:0.0.1
+    command: gunicorn hello_django.wsgi:application --bind 0.0.0.0:8000
+    links:
+      - postgres:postgres
+      - redis:redis
     volumes:
-      - ./postgres/pgdata:/data
+      - app:/home/app/web
+    networks:
+      - webapp_net
+    expose:
+      - 8000
+    env_file:
+      - .env.web
+    restart: always
+
+  redis:
+    container_name: redis
+    image: redis:6.0.5-alpine
+    volumes:
+      - redis_data:/data
+    networks:
+      - webapp_net
+    ports:
+      - 6379:6379
+    restart: always
+
+  postgres:
+    build: ./postgres
+    container_name: postgres
+    volumes:
+      - postgres_backups:/backup
+      - postgres_data:/var/lib/postgresql
     networks:
       - webapp_net
     ports:
       - 5432:5432
     env_file:
-      - ./.env.db
+      - .env.db
+    restart: always
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    volumes:
+       - pgadmin:/root/.pgadmin
+    networks:
+      - webapp_net
+    ports:
+      - 5050:80
+    env_file:
+      - .env.db
     restart: always
 
 networks:
   webapp_net:
     driver: bridge
     name: webapp_net
+
+volumes:
+  app:
+  postgres_backups:
+  postgres_data:
+  pgadmin:
+  redis_data:
