@@ -4,19 +4,26 @@ on: [push]
 
 jobs:
   build:
-    name: docker build images for test
+    name: Docker build images
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - name: docker login
+      env:
+        DOCKER_USER: ${{ secrets.DOCKER_USER }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      run: |
+        docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
     - name: docker build app
       run: |
-        docker build app
+        docker build ./app -t osad4iy91/webapp-web:$WEB_TAG
     - name: docker build nginx
       run: |
-        docker build nginx
-    - name: docker build postgres
+        docker build ./nginx -t osad4iy91/webapp-nginx:$NGINX_TAG
+    - name: docker push
       run: |
-        docker build postgres
+        docker push osad4iy91/webapp-nginx:$NGINX_TAG
+        docker push osad4iy91/webapp-web:$WEB_TAG
 
   deploy:
     name: Redeploy webhook call
