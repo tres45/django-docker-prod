@@ -12,8 +12,6 @@ services:
       - webapp_net
     ports:
       - 80:80
-    networks:
-      - webapp_net
     depends_on:
       - web
     restart: always
@@ -21,7 +19,6 @@ services:
   web:
     build: ./app
     container_name: web
-    image: webapp:0.0.1
     command: gunicorn hello_django.wsgi:application --bind 0.0.0.0:8000
     links:
       - postgres:postgres
@@ -32,8 +29,6 @@ services:
       - webapp_net
     expose:
       - 8000
-    env_file:
-      - .env.web
     restart: always
 
   redis:
@@ -57,8 +52,6 @@ services:
       - webapp_net
     ports:
       - 5432:5432
-    env_file:
-      - .env.db
     restart: always
 
   pgadmin:
@@ -70,8 +63,6 @@ services:
       - webapp_net
     ports:
       - 5050:80
-    env_file:
-      - .env.db
     restart: always
 
 networks:

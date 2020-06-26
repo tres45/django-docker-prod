@@ -1,0 +1,8 @@
+[
+  {
+    "id": "my-hook",
+    "execute-command": "/root/django-docker-prod/run_hook.sh",
+    "command-working-directory": "/root/django-docker-prod",
+    "include-command-output-in-response": true
+  }
+]

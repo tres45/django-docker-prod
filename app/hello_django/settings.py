@@ -19,7 +19,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 try:
     d = int(os.environ.get('DEBUG'))
 except Exception:
-    env_file.load(os.path.join(BASE_DIR, '../.env.web.dev'))
+    env_file.load(os.path.join(BASE_DIR, '../.env.dev'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
