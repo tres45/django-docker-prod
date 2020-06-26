@@ -12,11 +12,11 @@ jobs:
       run: |
         docker build app
     - name: docker build nginx
-        run: |
-          docker build nginx
+      run: |
+        docker build nginx
     - name: docker build postgres
-        run: |
-          docker build postgres
+      run: |
+        docker build postgres
 
   deploy:
     name: Redeploy webhook call
