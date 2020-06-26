@@ -27,3 +27,4 @@ jobs:
         uses: joelwmale/webhook-action@master
         env:
           WEBHOOK_URL: ${{ secrets.DEPLOY_WEBHOOK_URL }}
+          data: "Hello from github actions!"
