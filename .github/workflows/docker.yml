@@ -1,0 +1,29 @@
+name: Docker Series Builds
+
+on: [push]
+
+jobs:
+  build:
+    name: docker build images for test
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: docker build app
+      run: |
+        docker build app
+    - name: docker build nginx
+        run: |
+          docker build nginx
+    - name: docker build postgres
+        run: |
+          docker build postgres
+
+  deploy:
+    name: Redeploy webhook call
+    runs-on: ubuntu-latest
+    needs: [docker]
+    steps:
+      - name: Deploy docker container webhook
+        uses: joelwmale/webhook-action@master
+        env:
+          WEBHOOK_URL: ${{ secrets.DEPLOY_WEBHOOK_URL }}
