@@ -1,6 +1,10 @@
-name: Docker Series Builds
+name: Docker Image CI
 
-on: [push]
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
 jobs:
   build:
