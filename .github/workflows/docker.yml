@@ -1,0 +1,40 @@
+name: Docker Stack
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    name: Docker build images
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: docker login
+      env:
+        DOCKER_USER: ${{ secrets.DOCKER_USER }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      run: |
+        docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+    - name: docker build app
+      run: |
+        docker build ./app -t osad4iy91/webapp-web:$WEB_TAG
+    - name: docker build nginx
+      run: |
+        docker build ./nginx -t osad4iy91/webapp-nginx:$NGINX_TAG
+    - name: docker push
+      run: |
+        docker push osad4iy91/webapp-nginx:$NGINX_TAG
+        docker push osad4iy91/webapp-web:$WEB_TAG
+  deploy:
+    name: Redeploy webhook call
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      - name: Deploy docker container webhook
+        uses: joelwmale/webhook-action@master
+        env:
+          WEBHOOK_URL: ${{ secrets.DEPLOY_WEBHOOK_URL }}
+          data: "Hello from github actions!"
