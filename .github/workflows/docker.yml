@@ -20,14 +20,14 @@ jobs:
         docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
     - name: docker build app
       run: |
-        docker build ./app -t osad4iy91/webapp-web:$WEB_TAG
+        docker build ./app -t osad4iy91/webapp-web:0.0.1-29_06_2020
     - name: docker build nginx
       run: |
-        docker build ./nginx -t osad4iy91/webapp-nginx:$NGINX_TAG
+        docker build ./nginx -t osad4iy91/webapp-nginx:0.0.1-29_06_2020
     - name: docker push
       run: |
-        docker push osad4iy91/webapp-nginx:$NGINX_TAG
-        docker push osad4iy91/webapp-web:$WEB_TAG
+        docker push osad4iy91/webapp-nginx:0.0.1-29_06_2020
+        docker push osad4iy91/webapp-web:0.0.1-29_06_2020
 
   deploy:
     name: Redeploy webhook call
