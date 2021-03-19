@@ -4,6 +4,6 @@ psycopg2-binary==2.8.5
 gunicorn==20.0.4
 WhiteNoise==5.1.0
 flake8==3.8.3
-Pillow==7.1.2
+Pillow==8.1.1
 redis==3.5.3
 django-redis==4.12.1
